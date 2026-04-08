@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Global Recipe Book - Tu Pasaporte Culinario</title>
+        <link rel="stylesheet" href="css/index.css">
+        <script src="js/index.js"></script>
+    </head>
+    <body>
+        <div class="book-cover">
+            <header>
+                <h1 class="book-title">Global Recipe Book</h1>
+                <p class="book-subtitle">Tu Pasaporte Culinario</p>
+            </header>
+
+            <main>
+                <section class="intro">
+                    <p class="tagline">Explora sabores del mundo desde tu
+                        cocina</p>
+                    <p class="description">Bienvenido a <strong>Global Recipe
+                            Book</strong>, tu compañero culinario en la aventura
+                        de descubrir y compartir los tesoros gastronómicos de
+                        cada rincón del planeta.</p>
+                </section>
+
+                <section class="features">
+                    <div class="feature">
+                        <img src="resources/img/upload-icon.svg"
+                            alt="Icono de subida" class="feature-icon">
+                        <p>Comparte tus recetas únicas</p>
+                    </div>
+                    <div class="feature">
+                        <img src="resources/img/search-icon.svg"
+                            alt="Icono de exploración" class="feature-icon">
+                        <p>Explora platos de todo el mundo</p>
+                    </div>
+                    <div class="feature">
+                        <img src="resources/img/community-icon.svg"
+                            alt="Icono de comunidad" class="feature-icon">
+                        <p>Únete a una comunidad apasionada</p>
+                    </div>
+                </section>
+
+                <section class="cta-section">
+                    
+                    <form action="ExplorarServlet" method="post">
+                        <button type="submit" class="cta-button upload">Explorar Recetas</button>
+                    </form>
+                    <form action="IndexServlet" method="post">
+                        <button type="submit" class="cta-button upload">Compartir tu Receta</button>
+                    </form>
+                </section>
+            </main>
+
+            <footer>
+                <p class="quote">"La cocina es el paisaje puesto en la olla." -
+                    Proverbio chino</p>
+            </footer>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const quotes = [
+                    '"La cocina es el paisaje puesto en la olla." - Proverbio chino',
+                    '"La cocina es el arte más grande de la paz." - Masaharu Morimoto',
+                    '"El secreto de una buena cocina reside en el respeto hacia los ingredientes." - Alain Ducasse',
+                    '"Cocinar es como amar, hay que hacerlo sin miedo o no intentarlo." - Harriet Van Horne',
+                    '"La comida es nuestra conexión común, una experiencia universal." - James Beard',
+                    '"La cocina es una forma de arte, y todo gran artista necesita inspiración." - Chef Gusteau',
+                    '"La buena comida es el fundamento de la verdadera felicidad." - Auguste Escoffier',
+                    '"Cocinar es una filosofía; no es una receta." - Marco Pierre White',
+                    '"La cocina es alquimia en la más elevada definición." - Chef Gusteau',
+                    '"La comida es la parte material de la alimentación, pero el vino es la parte espiritual de nuestro alimento." - Alejandro Dumas',
+                    '"La cocina es el corazón del hogar." - Proverbio irlandés',
+                    '"La comida es símbolo de amor cuando las palabras son inadecuadas." - Alan D. Wolfelt',
+                    '"La cocina es una forma de decir te amo." - Anónimo',
+                    '"La comida es la esencia de la vida." - Anónimo',
+                    '"La cocina es el arte de transformar los ingredientes en amor." - Anónimo',
+                    '"La comida es la medicina más poderosa y la forma más poderosa de amor." - Dr. Mark Hyman',
+                    '"La cocina es una aventura, y la mejor forma de aprender es experimentando." - Julia Child',
+                    '"La comida es la base de la verdadera felicidad." - Auguste Escoffier',
+                    '"La cocina es una forma de arte, y todo gran artista necesita inspiración." - Chef Gusteau',
+                    '"La comida es nuestra conexión común, una experiencia universal." - James Beard'
+                ];
+
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                document.querySelector("footer .quote").textContent = randomQuote;
+            });
+        </script>
+        </div>
+    </body>
+</html>

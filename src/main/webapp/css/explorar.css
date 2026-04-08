@@ -1,0 +1,75 @@
+body {
+    font-family: 'Cormorant Garamond', serif;
+    background-color: rgb(228, 205, 178);
+    background-size: cover;
+    background-blend-mode: multiply;
+    background-attachment: fixed;
+    color: #2c2c2c;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    border: 3px;
+    height: 5px;
+    background: #804400;
+    margin: 2rem 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #4a4a4a;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    color: #525252;
+    font-style: italic;
+    text-shadow: #2c2c2c;
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.category {
+    background-color: rgba(255, 255, 255, 0.75);
+    border: 1px solid #e0d9d1;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: #4a4a4a;
+    transition: all 0.3s ease-out;
+}
+
+.category:hover {
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    scale: 1.05;
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+}

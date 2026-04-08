@@ -1,0 +1,12 @@
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\bin\Debug\recipe.dacpac
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\recipe.sqlproj.AssemblyReference.cache
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\recipe.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\recipe.sourcelink.json
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\Model.xml
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\refactor.xml
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\postdeploy.sql
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\predeploy.sql
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\recipe.dll
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\obj\Debug\recipe.pdb
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\bin\Debug\recipe.dll
+c:\Users\jkqui\OneDrive\Documentos\NetBeansProjects\RecipeBook\recipe\bin\Debug\recipe.pdb

@@ -1,0 +1,57 @@
+{
+  "format": 1,
+  "restore": {
+    "c:\\Users\\jkqui\\OneDrive\\Documentos\\NetBeansProjects\\RecipeBook\\recipe\\recipe.sqlproj": {}
+  },
+  "projects": {
+    "c:\\Users\\jkqui\\OneDrive\\Documentos\\NetBeansProjects\\RecipeBook\\recipe\\recipe.sqlproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "c:\\Users\\jkqui\\OneDrive\\Documentos\\NetBeansProjects\\RecipeBook\\recipe\\recipe.sqlproj",
+        "projectName": "recipe",
+        "projectPath": "c:\\Users\\jkqui\\OneDrive\\Documentos\\NetBeansProjects\\RecipeBook\\recipe\\recipe.sqlproj",
+        "packagesPath": "C:\\Users\\jkqui\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\jkqui\\OneDrive\\Documentos\\NetBeansProjects\\RecipeBook\\recipe\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\jkqui\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net46": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU5128"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net46": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )",
+              "autoReferenced": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

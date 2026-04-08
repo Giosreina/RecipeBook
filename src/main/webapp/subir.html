@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Nueva Receta - Global Recipe Book</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/subir.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Subir Nueva Receta</h1>
+        <form id="receta-form" action="RecetaServlet" method="POST">
+            <div>
+                <label for="nombre">Nombre de la Receta:</label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div>
+                <label for="tipo">Tipo de Receta:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="DESAYUNO">Desayuno</option>
+                    <option value="ALMUERZO">Almuerzo</option>
+                    <option value="CENA">Cena</option>
+                    <option value="POSTRE">Postre</option>
+                    <option value="SNACK">Snack</option>
+                    <option value="BEBIDA">Bebida</option>
+                    <option value="ENSALADA">Ensalada</option>
+                    <option value="GUARNICION">Guarnición</option>
+                </select>
+            </div>
+            <div>
+                <label for="imagen">URL de la Imagen:</label>
+                <input type="text" id="imagen" name="imagen">
+            </div>
+            <div>
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+            </div>
+            <div class="ingredientes">
+                <label>Ingredientes:</label>
+                <div id="ingredientes-list"></div>
+                <input type="text" id="nuevo-ingrediente" placeholder="Nuevo ingrediente">
+                <button type="button" class="add-btn" onclick="agregarIngrediente()">Agregar Ingrediente</button>
+            </div>
+            <input type="hidden" id="ingredientes" name="ingredientes">
+            <div class="utensilios">
+                <label>Utensilios:</label>
+                <div id="utensilios-list"></div>
+                <input type="text" id="nuevo-utensilio" placeholder="Nuevo utensilio">
+                <button type="button" class="add-btn" onclick="agregarUtensilio()">Agregar Utensilio</button>
+            </div>
+            <input type="hidden" id="utensilios" name="utensilios">
+            <div class="pasos">
+                <label>Pasos:</label>
+                <div id="pasos-list"></div>
+                <button type="button" class="add-btn" onclick="agregarPaso()">Agregar Paso</button>
+            </div>
+            <input type="hidden" id="pasos" name="pasos">
+            
+            <button type="submit" class="submit-btn">Subir Receta</button>
+        </form>
+    </div>
+
+    <script>
+        let ingredientes = [];
+        let utensilios = [];
+        let pasos = [];
+
+        function agregarIngrediente() {
+            const ingrediente = document.getElementById('nuevo-ingrediente').value;
+            if (ingrediente) {
+                ingredientes.push(ingrediente);
+                actualizarLista('ingredientes-list', ingredientes);
+                document.getElementById('nuevo-ingrediente').value = '';
+                actualizarCampoOculto('ingredientes', ingredientes);
+            }
+        }
+
+        function agregarUtensilio() {
+            const utensilio = document.getElementById('nuevo-utensilio').value;
+            if (utensilio) {
+                utensilios.push(utensilio);
+                actualizarLista('utensilios-list', utensilios);
+                document.getElementById('nuevo-utensilio').value = '';
+                actualizarCampoOculto('utensilios', utensilios);
+            }
+        }
+
+        function agregarPaso() {
+            const pasoNum = pasos.length + 1;
+            const paso = [];
+            const pasoHTML = `
+                <div class="paso" id="paso-${pasoNum}">
+                    <h4>Paso ${pasoNum} <button type="button" class="delete-btn" onclick="borrarPaso(${pasoNum})">Borrar</button></h4>
+                    <textarea id="paso-descripcion-${pasoNum}" placeholder="Descripción del paso" rows="2"></textarea>
+                    <input type="number" id="paso-tiempo-${pasoNum}" placeholder="Tiempo (en segundos)">
+                    <input type="text" id="paso-utensilios-${pasoNum}" placeholder="Utensilios (separados por coma)">
+                    <input type="text" id="paso-ingredientes-${pasoNum}" placeholder="Ingredientes (separados por coma)">
+                    <input type="text" id="paso-imagen-${pasoNum}" placeholder="URL de la imagen del paso">
+                </div>
+            `;
+            document.getElementById('pasos-list').insertAdjacentHTML('beforeend', pasoHTML);
+            pasos.push({});
+            actualizarPasos();
+        }
+
+        function actualizarLista(id, items) {
+            const lista = document.getElementById(id);
+            lista.innerHTML = items.map((item, index) => `
+                <div class="item-container">
+                    <div>${item}</div>
+                    <button type="button" class="delete-btn" onclick="borrarItem('${id}', ${index})">Borrar</button>
+                </div>
+            `).join('');
+        }
+
+        function borrarItem(listId, index) {
+            if (listId === 'ingredientes-list') {
+                ingredientes.splice(index, 1);
+                actualizarLista('ingredientes-list', ingredientes);
+                actualizarCampoOculto('ingredientes', ingredientes);
+            } else if (listId === 'utensilios-list') {
+                utensilios.splice(index, 1);
+                actualizarLista('utensilios-list', utensilios);
+                actualizarCampoOculto('utensilios', utensilios);
+            }
+        }
+
+        function borrarPaso(pasoNum) {
+            const paso = document.getElementById(`paso-${pasoNum}`);
+            if (paso) {
+                paso.remove();
+                pasos.splice(pasoNum - 1, 1);
+                // Renumerar los pasos restantes
+                const pasoElements = document.querySelectorAll('.paso');
+                pasoElements.forEach((el, index) => {
+                    el.id = `paso-${index + 1}`;
+                    el.querySelector('h4').innerHTML = `Paso ${index + 1} <button type="button" class="delete-btn" onclick="borrarPaso(${index + 1})">Borrar</button>`;
+                    el.querySelector('textarea').id = `paso-descripcion-${index + 1}`;
+                    el.querySelector('input[type="number"]').id = `paso-tiempo-${index + 1}`;
+                    el.querySelector('input[placeholder="Utensilios (separados por coma)"]').id = `paso-utensilios-${index + 1}`;
+                    el.querySelector('input[placeholder="Ingredientes (separados por coma)"]').id = `paso-ingredientes-${index + 1}`;
+                    el.querySelector('input[placeholder="URL de la imagen del paso"]').id = `paso-imagen-${index + 1}`;
+                });
+                actualizarPasos();
+            }
+        }
+
+        function actualizarCampoOculto(id, array) {
+            document.getElementById(id).value = JSON.stringify(array);
+        }
+
+        function actualizarPasos() {
+            const pasosData = Array.from(document.querySelectorAll('.paso')).map((paso, index) => {
+                const num = index + 1;
+                return {
+                    descripcion: document.getElementById(`paso-descripcion-${num}`).value,
+                    tiempo: document.getElementById(`paso-tiempo-${num}`).value,
+                    utensilios: document.getElementById(`paso-utensilios-${num}`).value,
+                    ingredientes: document.getElementById(`paso-ingredientes-${num}`).value,
+                    imagen: document.getElementById(`paso-imagen-${num}`).value
+                };
+            });
+            actualizarCampoOculto('pasos', pasosData);
+        }
+
+        document.getElementById('receta-form').addEventListener('submit', function(e) {
+            actualizarPasos();
+            // El formulario se enviará automáticamente al servlet
+        });
+    </script>
+</body>
+</html>
