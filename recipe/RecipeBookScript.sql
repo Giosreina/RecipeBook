@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS RECETAS(
     tiempo_preparacion INT NULL,
     id_usuario INT NOT NULL,
     id_imagen INT NULL,
-    CONSTRAINT tiem_limite CHECK (tiempo_preparacion <= )
     CONSTRAINT fk_multimedia_receta
     FOREIGN KEY (id_imagen) REFERENCES MULTIMEDIA(id_multimedia),
     CONSTRAINT fk_usuario_receta
@@ -93,7 +92,7 @@ CREATE TABLE IF NOT EXISTS VALORACION(
     comentario TEXT ,
     fecha_comentario TIMESTAMP DEFAULT CURRENT_DATE,
     valor INT, 
-    CONSTRAINT fec_limite CHECK (fecha_comentario <= CURRENTE_DATE)
+    CONSTRAINT fec_limite CHECK (fecha_comentario <= CURRENT_DATE),
     CONSTRAINT val_limite CHECK (valor >= 1 AND valor <= 5),
     CONSTRAINT fk_valoracion_receta
     FOREIGN KEY (id_receta) REFERENCES RECETAS(id_receta),
