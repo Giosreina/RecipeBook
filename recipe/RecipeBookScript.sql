@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS USUARIO(
     password VARCHAR(100) NOT NULL,
     id_multimedia INT NULL,
     id_rol INT NOT NULL,
+    CONSTRAINT fk_multimedia_usuario
+    FOREIGN KEY (id_multimedia) REFERENCES MULTIMEDIA(id_multimedia),
     CONSTRAINT fk_rol_usuario
     FOREIGN KEY (id_rol) REFERENCES ROL(id_rol)
 );
@@ -82,16 +84,16 @@ CREATE TABLE IF NOT EXISTS UTENSILIOS(
     nombre_utensilio VARCHAR(255) NOT NULL,
     CONSTRAINT fk_utensilio_receta
     FOREIGN KEY (id_receta) REFERENCES RECETAS(id_receta),
-    CONSTRAINT fk_utensilio_receta
+    CONSTRAINT fk_utensilio_paso
     FOREIGN KEY (id_paso) REFERENCES PASOS(id_paso)
 );
 CREATE TABLE IF NOT EXISTS VALORACION(
-    id_comentario SERIAL PRIMARY KEY,
+    id_valoracion SERIAL PRIMARY KEY,
     id_receta INT NOT NULL,
-    id_usuario INT NOT NULL,
+    id_usuario INT NOT NULL DEFAULT 1,
     comentario TEXT ,
     fecha_comentario TIMESTAMP DEFAULT CURRENT_DATE,
-    valor INT, 
+    valor INT  
     CONSTRAINT fec_limite CHECK (fecha_comentario <= CURRENT_DATE),
     CONSTRAINT val_limite CHECK (valor >= 1 AND valor <= 5),
     CONSTRAINT fk_valoracion_receta
