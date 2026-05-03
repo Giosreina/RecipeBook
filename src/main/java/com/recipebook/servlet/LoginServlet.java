@@ -1,7 +1,6 @@
 package com.recipebook.servlet;
 
 import com.recipebook.logic.User;
-import com.recipebook.logic.UsersContainer;
 import com.recipebook.dao.UserDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,9 +19,22 @@ public class LoginServlet extends HttpServlet {
         
         HttpSession session = request.getSession();
         UserDao userDao = (UserDao) session.getAttribute("userDao");
-        UsersContainer usersContainer = userDao.obtenerUsuarios();
         
-        User user = usersContainer.selectUser(username);
+        if (userDao == null) {
+            request.setAttribute("mensaje", "Error: No se pudo conectar a la base de datos");
+            request.setAttribute("mensajeClase", "error");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+        
+        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+            request.setAttribute("mensaje", "Por favor, ingresa el usuario y la contraseña");
+            request.setAttribute("mensajeClase", "error");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
+        }
+        
+        User user = userDao.obtenerUsuario(username);
         
         if (user == null) {
             request.setAttribute("mensaje", "El nombre de usuario no está registrado");
