@@ -12,7 +12,7 @@
     User currentUser = (User) session.getAttribute("currentUser");
     UserDao userDao = (UserDao) session.getAttribute("userDao");
     RecetaDao recetaDao = userDao.getRecetaDAO();
-    RecetasContainer recetaContainer = recetaDao.obtenerRecetasPorUsuario(userDao.obtenerUserID(currentUser.getUsername()));
+    RecetasContainer recetaContainer = new RecetasContainer(recetaDao.obtenerRecetasPorUsuario(userDao.obtenerUserID(currentUser.getUsername())));
     List<Receta> userRecetas = recetaContainer.getRecetas();   
 
     Map<String, String> typeIcons = new HashMap<>();
