@@ -13,7 +13,7 @@ public class User {
     private String rol;
     private String username;
     private String password;
-    private ArrayList<Receta> recetas;
+    private RecetasContainer recetas;
 
     public User(String nombre_1, String nombre_2, String apellido_1, String apellido_2, String correo, String username, String password, String urlMultimedia){
         this.nombre_1 = nombre_1;
@@ -25,7 +25,7 @@ public class User {
         this.urlMultimedia = urlMultimedia;
         this.username = username;
         this.password = password;
-        recetas = new ArrayList<>();        
+        recetas = new RecetasContainer();        
     }
     public User(Integer id_usuario, String nombre_1, String nombre_2, String apellido_1, String apellido_2, String correo, String username, String rol ,String password, String urlMultimedia) {
         this.id_usuario = id_usuario;
@@ -39,22 +39,22 @@ public class User {
         this.urlMultimedia = urlMultimedia;
         this.username = username;
         this.password = password;
-        recetas = new ArrayList<>();
+        recetas = new RecetasContainer();
     }
 
     public void addReceta(Receta receta){
-        recetas.add(receta);
+        recetas.addReceta(receta);
     }
 
     public void deleteReceta(Receta receta){
-        recetas.remove(receta);
+        recetas.removeReceta(receta);
     }
 
     public Receta selectReceta(int id){
-        return recetas.get(id - 1);
+        return recetas.selectReceta(id - 1);
     }
 
-    public ArrayList<Receta> getRecetas(){
+    public RecetasContainer getRecetas(){
         return recetas;
     }
 
@@ -74,7 +74,7 @@ public class User {
         return this.password;
     }
 
-    public void setRecetas(ArrayList<Receta> recetas){
+    public void setRecetas(RecetasContainer recetas){
         this.recetas = recetas;
     }
 

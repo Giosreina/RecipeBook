@@ -2,10 +2,10 @@ package com.recipebook.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import com.recipebook.logic.Receta;
 import com.recipebook.logic.User;
+import com.recipebook.logic.UsersContainer;
 
 @SuppressWarnings("CallToPrintStackTrace")
 public class UserDao {
@@ -18,14 +18,11 @@ public class UserDao {
     }
 
     /**
-     * Inserta una URL en la tabla MULTIMEDIA y retorna el ID generado.
-     * 
-     * @param url La URL de la imagen.
-     * @return El ID de la multimedia insertada, o null si falla.
+     * Obtiene el nombre del rol según su ID.
      */
     private String obtenerRol(int idRol) {
         String selectRolIDQuery = String.format(
-            "SELECT nombre_rol FROM ROL WHERE id_rol = %d", idRol
+            "SELECT nombre_rol FROM rol WHERE id_rol = %d", idRol
         );
 
         try {
@@ -39,70 +36,83 @@ public class UserDao {
 
         return null;
     }
+
+    /**
+     * Inserta una URL en la tabla MULTIMEDIA y retorna el ID generado.
+     */
     private Integer insertarMultimedia(String url) {
         try {
             String insertMultimediaQuery = String.format(
-                "INSERT INTO MULTIMEDIA (url) VALUES ('%s')",
-             url
+                "INSERT INTO multimedia (url) VALUES ('%s') RETURNING id_multimedia",
+                url
             );
-            sqlController.executeUpdate(insertMultimediaQuery);
-            ResultSet rs = sqlController.executeQuery("SELECT SCOPE_IDENTITY() AS id_multimedia");
-            rs.next();
-            return rs.getInt("id_multimedia");
+            ResultSet rs = sqlController.executeQuery(insertMultimediaQuery);
+            if (rs.next()) {
+                return rs.getInt("id_multimedia");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
     /**
      * Agrega un usuario a la base de datos.
-     * 
-     * @param user Usuario a agregar.
-     * @return true si el usuario se agregó correctamente, false en caso contrario.
      */
     public boolean agregarUsuario(User user) {
-        // Insertar imagen del usuario en MULTIMEDIA si existe
         Integer idMultimediaUsuario = null;
-        if (user.getUrlMultimedia() != null) {
+        if (user.getUrlMultimedia() != null && !user.getUrlMultimedia().isEmpty()) {
             idMultimediaUsuario = insertarMultimedia(user.getUrlMultimedia());
-            if (idMultimediaUsuario == null) {
-                return false; // Falló la inserción de multimedia
-            }
         }
-
-        String insertUserQuery = String.format(
-            "INSERT INTO USUARIO (nombre_1, nombre_2, apellido_1, apellido_2, correo_electronico, username, password, id_multimedia, id_rol) VALUES ('%s', %s, '%s', %s, '%s', '%s', '%s', %s, %d)",
-            user.getNombre_1(),
-            user.getNombre_2() != null ? "'" + user.getNombre_2() + "'" : "NULL",
-            user.getApellido_1(),
-            user.getApellido_2() != null ? "'" + user.getApellido_2() + "'" : "NULL",
-            user.getCorreo(),
-            user.getUsername(),
-            user.getPassword(),
-            idMultimediaUsuario != null ? idMultimediaUsuario.toString() : "NULL",
-            1 // Asumiendo rol por defecto, ajustar según lógica de negocio
-        );
 
         try {
-            sqlController.executeUpdate(insertUserQuery);
-            ResultSet rs = sqlController.executeQuery("SELECT SCOPE_IDENTITY() AS id_usuario");
-            rs.next();
-            int userID = rs.getInt("id_usuario");
+            String insertUserQuery = String.format(
+                "INSERT INTO usuario (nombre_1, nombre_2, apellido_1, apellido_2, correo_electronico, username, password, id_multimedia, id_rol) " +
+                "VALUES ('%s', %s, '%s', %s, '%s', '%s', '%s', %s, %d)",
+                escapeSQLString(user.getNombre_1()),
+                user.getNombre_2() != null && !user.getNombre_2().isEmpty() ? "'" + escapeSQLString(user.getNombre_2()) + "'" : "NULL",
+                escapeSQLString(user.getApellido_1()),
+                user.getApellido_2() != null && !user.getApellido_2().isEmpty() ? "'" + escapeSQLString(user.getApellido_2()) + "'" : "NULL",
+                escapeSQLString(user.getCorreo()),
+                escapeSQLString(user.getUsername()),
+                escapeSQLString(user.getPassword()),
+                idMultimediaUsuario != null ? idMultimediaUsuario.toString() : "NULL",
+                3 
+            );
 
-            for (Receta receta : user.getRecetas()) {
-                recetaDAO.agregarReceta(receta, userID);
+            System.out.println("SQL Query: " + insertUserQuery);
+            int rowsAffected = sqlController.executeUpdate(insertUserQuery);
+            
+            if (rowsAffected > 0) {
+                String selectIdQuery = String.format(
+                    "SELECT id_usuario FROM usuario WHERE username = '%s'",
+                    escapeSQLString(user.getUsername())
+                );
+                ResultSet rs = sqlController.executeQuery(selectIdQuery);
+                if (rs.next()) {
+                    int userID = rs.getInt("id_usuario");
+
+                    for (Receta receta : user.getRecetas().getRecetas()) {
+                        recetaDAO.agregarReceta(receta, userID);
+                    }
+                }
+                return true;
             }
-
-            return true;
         } catch (SQLException e) {
+            System.out.println("SQLException al insertar usuario: " + e.getMessage());
             e.printStackTrace();
-            return false;
         }
+
+        return false;
     }
+
     private String obtenerImagen(int idMultimedia) {
+        if (idMultimedia <= 0) {
+            return null;
+        }
+
         String selectUrlQuery = String.format(
-            "SELECT url FROM MULTIMEDIA WHERE id_multimedia = %d", idMultimedia
+            "SELECT url FROM multimedia WHERE id_multimedia = %d", idMultimedia
         );
 
         try {
@@ -117,10 +127,12 @@ public class UserDao {
         return null;
     }
 
-   
-    public ArrayList<User> obtenerUsuarios() {
-        ArrayList<User> usersContainer = new ArrayList<>();
-        String selectUsersQuery = "SELECT * FROM Users";
+    /**
+     * Obtiene todos los usuarios de la base de datos.
+     */
+    public UsersContainer obtenerUsuarios() {
+        UsersContainer usersContainer = new UsersContainer();
+        String selectUsersQuery = "SELECT * FROM usuario";
 
         try {
             ResultSet rs = sqlController.executeQuery(selectUsersQuery);
@@ -132,14 +144,15 @@ public class UserDao {
                 String apellido_1 = rs.getString("apellido_1");
                 String apellido_2 = rs.getString("apellido_2");
                 String correo = rs.getString("correo_electronico");
-                String urlMultimedia = obtenerImagen(rs.getInt("id_multimedia"));
+                int idMultimedia = rs.getInt("id_multimedia");
+                String urlMultimedia = obtenerImagen(idMultimedia);
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                String rol = obtenerRol(rs.getInt("id_rol"));
+                int idRol = rs.getInt("id_rol");
+                String rol = obtenerRol(idRol);
 
-                User user = new User(userID, nombre_1, nombre_2, apellido_1, apellido_2, correo, username, rol,password, urlMultimedia);
-                user.setRecetas(recetaDAO.obtenerRecetasPorUsuario(userID));
-                usersContainer.add(user);
+                User user = new User(userID, nombre_1, nombre_2, apellido_1, apellido_2, correo, username, rol, password, urlMultimedia);
+                usersContainer.addUser(user);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -149,41 +162,11 @@ public class UserDao {
     }
 
     /**
-     * Elimina un usuario de la base de datos.
-     * 
-     * @param username Nombre del usuario a eliminar.
-     * @return true si el usuario se eliminó correctamente, false en caso contrario.
-     */
-    public boolean eliminarUsuario(String username) {
-        String deleteUserQuery = String.format(
-            "DELETE FROM Users WHERE Name = '%s'", username
-        );
-
-        String obtainUserIDQuery = String.format(
-            "SELECT UserID FROM Users WHERE Name = '%s'", username
-        );
-
-        try {
-            ResultSet userIdQ = sqlController.executeQuery(obtainUserIDQuery);
-                int userID = userIdQ.getInt("UserID");
-                recetaDAO.eliminarTodasRecetasPorUsuario(userID);
-            sqlController.executeUpdate(deleteUserQuery);
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * Obtiene un usuario de la base de datos por su nombre.
-     * 
-     * @param username Nombre del usuario a obtener.
-     * @return Usuario encontrado o null si no se encuentra.
+     * Obtiene un usuario de la base de datos por su username.
      */
     public User obtenerUsuario(String username) {
         String selectUserQuery = String.format(
-            "SELECT * FROM Users WHERE Name = '%s'", username
+            "SELECT * FROM usuario WHERE username = '%s'", escapeSQLString(username)
         );
 
         try {
@@ -196,13 +179,13 @@ public class UserDao {
                 String apellido_1 = rs.getString("apellido_1");
                 String apellido_2 = rs.getString("apellido_2");
                 String correo = rs.getString("correo_electronico");
-                String urlMultimedia = obtenerImagen(rs.getInt("id_multimedia"));
+                int idMultimedia = rs.getInt("id_multimedia");
+                String urlMultimedia = obtenerImagen(idMultimedia);
                 String password = rs.getString("password");
-                String rol = obtenerRol(rs.getInt("id_rol"));
+                int idRol = rs.getInt("id_rol");
+                String rol = obtenerRol(idRol);
 
-                User user = new User(userID, nombre_1, nombre_2, apellido_1, apellido_2, correo, username, rol,password, urlMultimedia);
-                user.setRecetas(recetaDAO.obtenerRecetasPorUsuario(userID));
-                return user;
+                return new User(userID, nombre_1, nombre_2, apellido_1, apellido_2, correo, username, rol, password, urlMultimedia);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -212,21 +195,18 @@ public class UserDao {
     }
 
     /**
-     * Obtiene el ID de un usuario por su nombre.
-     * 
-     * @param username Nombre del usuario.
-     * @return ID del usuario o -1 si no se encuentra.
+     * Obtiene el ID de un usuario por su username.
      */
     public int obtenerUserID(String username) {
         String selectUserIDQuery = String.format(
-            "SELECT id_usuario FROM Users WHERE Name = '%s'", username
+            "SELECT id_usuario FROM usuario WHERE username = '%s'", escapeSQLString(username)
         );
 
         try {
             ResultSet rs = sqlController.executeQuery(selectUserIDQuery);
 
             if (rs.next()) {
-                return rs.getInt("UserID");
+                return rs.getInt("id_usuario");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -235,12 +215,14 @@ public class UserDao {
         return -1;
     }
 
-    /**
-     * Obtiene el RecetaDAO asociado.
-     * 
-     * @return RecetaDAO.
-     */
     public RecetaDao getRecetaDAO() {
         return recetaDAO;
+    }
+
+    private String escapeSQLString(String str) {
+        if (str == null) {
+            return "";
+        }
+        return str.replace("'", "''");
     }
 }

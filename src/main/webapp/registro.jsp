@@ -36,25 +36,56 @@
             <header>
                 <h1>Registro de usuario</h1>
             </header>
-            <form id="receta-form" action="RegistroServlet" method="POST">
-                <p>conectado a la DB: <%= connection %></p>
+            <form id="receta-form" method="POST" action="RegistroServlet">
                 <div class="form-group">
-                    <label for="username">Nombre de usuario:</label>
-                    <input type="text" id="username" name="username" required onblur="verificarUsername()">
+                    <label for="nombre_1">Primer Nombre: <span class="required">*</span></label>
+                    <input type="text" id="nombre_1" name="nombre_1" required placeholder="Ej: Juan">
+                    <small class="help-text">Solo letras, máximo 20 caracteres</small>
                 </div>
                 <div class="form-group">
-                    <label for="password">Contraseña:</label>
+                    <label for="nombre_2">Segundo Nombre:</label>
+                    <input type="text" id="nombre_2" name="nombre_2" placeholder="Ej: Carlos">
+                    <small class="help-text">Opcional - Solo letras, máximo 20 caracteres</small>
+                </div>
+                <div class="form-group">
+                    <label for="apellido_1">Primer Apellido: <span class="required">*</span></label>
+                    <input type="text" id="apellido_1" name="apellido_1" required placeholder="Ej: García">
+                    <small class="help-text">Solo letras, máximo 20 caracteres</small>
+                </div>
+                <div class="form-group">
+                    <label for="apellido_2">Segundo Apellido:</label>
+                    <input type="text" id="apellido_2" name="apellido_2" placeholder="Ej: López">
+                    <small class="help-text">Opcional - Solo letras, máximo 20 caracteres</small>
+                </div>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico: <span class="required">*</span></label>
+                    <input type="email" id="correo" name="correo" required placeholder="Ej: usuario@gmail.com" onblur="verificarEmail()">
+                    <small class="help-text">Debe ser un correo válido (ej: usuario@gmail.com, usuario@outlook.com)</small>
+                </div>
+                <div class="form-group">
+                    <label for="username">Nombre de usuario: <span class="required">*</span></label>
+                    <input type="text" id="username" name="username" required placeholder="Ej: juangarcia" onblur="verificarUsername()">
+                    <small class="help-text">Sin espacios, mínimo 3 caracteres</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña: <span class="required">*</span></label>
                     <div class="password-container">
-                        <input type="password" id="password" name="password" required onblur="verificarPassword()">
+                        <input type="password" id="password" name="password" required placeholder="Mínimo 6 caracteres" onblur="verificarPassword()">
                         <i class="fa fa-eye password-toggle-icon" onclick="togglePasswordVisibility('password')"></i>
                     </div>
+                    <small class="help-text">Mínimo 6 caracteres, incluye mayúsculas, minúsculas y números si es posible</small>
                 </div>
                 <div class="form-group">
-                    <label for="confPassword">Confirmar Contraseña:</label>
+                    <label for="confPassword">Confirmar Contraseña: <span class="required">*</span></label>
                     <div class="password-container">
-                        <input type="password" id="confPassword" name="confPassword" required onblur="verificarPassword()">
+                        <input type="password" id="confPassword" name="confPassword" required placeholder="Repite tu contraseña" onblur="verificarPassword()">
                         <i class="fa fa-eye password-toggle-icon" onclick="togglePasswordVisibility('confPassword')"></i>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="urlMultimedia">URL de Imagen de Perfil:</label>
+                    <input type="text" id="urlMultimedia" name="urlMultimedia" placeholder="Ej: https://ejemplo.com/imagen.jpg">
+                    <small class="help-text">Opcional - URL de una imagen (ej: https://ejemplo.com/imagen.jpg)</small>
                 </div>
                 <script>
                     function togglePasswordVisibility(id) {
@@ -81,6 +112,34 @@
                         position: absolute;
                         right: 10px;
                         cursor: pointer;
+                    }
+                    .required {
+                        color: red;
+                    }
+                    .help-text {
+                        display: block;
+                        font-size: 0.85em;
+                        color: #666;
+                        margin-top: 4px;
+                    }
+                    .success {
+                        background-color: #d4edda;
+                        border: 1px solid #c3e6cb;
+                        color: #155724;
+                    }
+                    .error {
+                        background-color: #f8d7da;
+                        border: 1px solid #f5c6cb;
+                        color: #721c24;
+                    }
+                    #mensaje {
+                        padding: 12px;
+                        border-radius: 4px;
+                        margin-bottom: 15px;
+                        display: none;
+                    }
+                    #mensaje.show {
+                        display: block;
                     }
                 </style>
                 <p id="mensaje"></p>
