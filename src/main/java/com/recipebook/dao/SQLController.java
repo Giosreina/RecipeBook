@@ -10,22 +10,26 @@ import java.sql.Statement;
 public class SQLController {
     private Connection connection;
     private final boolean connected;
-    private final String connectionUrl = "jdbc:sqlserver://PCPersonal:1433;databaseName=RECIPE_BOOK;integratedSecurity=true;encrypt=false;trustServerCertificate=true;";
+    private final String connectionUrl = "jdbc:postgresql://localhost:5432/recipebook";
 
     public SQLController() {
-        connected = start(this.connectionUrl);
+        connected = start(this.connectionUrl, "giosreina", "Kabuto43*");
     }
 
     public SQLController(String connectionUrl) {
-        connected = start(connectionUrl);
+        connected = start(connectionUrl, "giosreina", "Kabuto43*");
+    }
+
+    public SQLController(String connectionUrl, String user, String password) {
+        connected = start(connectionUrl, user, password);
     }
     
-    private boolean start(String connectionUrl) {
+    private boolean start(String connectionUrl, String user, String password) {
         try {
-            // Cargar el driver JDBC
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            System.out.print("Connecting to SQL Server ... ");
-            connection = DriverManager.getConnection(connectionUrl);
+            // Cargar el driver JDBC para PostgreSQL
+            Class.forName("org.postgresql.Driver");
+            System.out.print("Connecting to PostgreSQL ... ");
+            connection = DriverManager.getConnection(connectionUrl, user, password);
             System.out.println("Done.");
             return true;
         } catch (SQLException | ClassNotFoundException e) {
