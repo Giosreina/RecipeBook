@@ -1,4 +1,4 @@
-|package com.recipebook.servlet;
+package com.recipebook.servlet;
 
 import java.io.IOException;
 
@@ -34,8 +34,12 @@ public class IndexServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        String connectionUrl = "jdbc:sqlserver://sql.bsite.net\\MSSQL2016;databaseName=jkvely_Recipes;user=jkvely_Recipes;password=1029;trustServerCertificate=true";
-        SQLController sqlController = new SQLController(connectionUrl);
+        // Conexión a PostgreSQL
+        String connectionUrl = "jdbc:postgresql://localhost:5432/recipebook";
+        String user = "giosreina";
+        String password = "Kabuto43*";
+        
+        SQLController sqlController = new SQLController(connectionUrl, user, password);
 
         session.setAttribute("connectionUrl", connectionUrl);
 
