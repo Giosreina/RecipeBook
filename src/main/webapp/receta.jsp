@@ -41,7 +41,7 @@
         </div>
         
         <div class="botones">
-            <button type="button" onclick="window.location.href='./explorar.html';">Volver a Explorar</button>
+            <button type="button" onclick="window.location.href='./ExplorarServlet';">Volver a Explorar</button>
             <button type="button" onclick="mostrarValoracion();">Agregar Valoración</button>
         </div>
         

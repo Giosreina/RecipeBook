@@ -12,20 +12,7 @@
 
     if (userDao != null && categoria != null) {
         RecetaDao recetaDao = userDao.getRecetaDAO();
-        RecetasContainer recetaContainerDB = new RecetasContainer(recetaDao.obtenerRecetas());
-        RecetasContainer recetasCategoriaRC = new RecetasContainer();
-
-        for (Receta receta : recetaContainerDB.getRecetas()) {
-            // CORRECCIÓN: Validamos que el tipo no sea null antes de usar toString()
-            Object tipoRaw = receta.getTipo();
-            if (tipoRaw != null) {
-                String tipoStr = tipoRaw.toString();
-                if (tipoStr.equalsIgnoreCase(categoria)) {
-                    recetasCategoriaRC.addReceta(receta);
-                }
-            }
-        }
-        recetasCategoria = recetasCategoriaRC.getRecetas();
+        recetasCategoria = recetaDao.obtenerRecetasPorTipo(categoria);
     }
 %>
 
