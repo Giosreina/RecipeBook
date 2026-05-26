@@ -156,9 +156,9 @@ public class RecetaDao {
         try {
             // Primero, obtener el ID del tipo de receta
             String selectTipoQuery = String.format(
-                "SELECT id_tipo_receta FROM tipo_receta WHERE nombre_tipo = '%s'",
-                escapeSQLString(tipoReceta)
-            );
+            "SELECT id_tipo_receta FROM tipo_receta WHERE nombre_tipo ILIKE '%s'",
+            escapeSQLString(tipoReceta)
+);
             ResultSet rs = sqlController.executeQuery(selectTipoQuery);
             
             if (rs.next()) {
@@ -281,9 +281,10 @@ public class RecetaDao {
         String tipo = obtenerTipoReceta(recetaID);
 
         Receta receta = new Receta(nombre, urlImagen, descripcion, tipo);
+        receta.setId(recetaID);  
         receta.setTiempo(tiempo);
+        receta.setValoracion(obtenerValoracion(recetaID));
 
-        // Obtener pasos
         String selectPasosQuery = String.format("SELECT * FROM pasos WHERE id_receta = %d", recetaID);
         try {
             ResultSet rsPasos = sqlController.executeQuery(selectPasosQuery);
@@ -502,5 +503,23 @@ public class RecetaDao {
             e.printStackTrace();
             return false;
         }
+    }
+    private double obtenerValoracion(int recetaID) {
+        String query = String.format(
+            "SELECT AVG(valor) AS promedio FROM valoracion WHERE id_receta = %d", recetaID
+        );
+        try {
+            ResultSet rs = sqlController.executeQuery(query);
+            if (rs.next()) {
+                double promedio = rs.getDouble("promedio");
+                // AVG devuelve 0 si no hay filas con g     etDouble
+                if (!rs.wasNull()) {
+                    return promedio;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 }
