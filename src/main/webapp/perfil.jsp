@@ -32,9 +32,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario - Global Recipe Book</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/perfil.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+            <ul class="navbar-nav">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="explorar.html">Explorar Recetas</a></li>
+                <li><a href="subir.html">Subir Receta</a></li>
+            </ul>
+            <div class="navbar-user-section">
+                <span class="navbar-user-info">Bienvenido, <%= currentUser.getUsername() %></span>
+                <div class="navbar-divider"></div>
+                <a href="perfil.jsp" class="active">Mi Perfil</a>
+                <a href="LogoutServlet" class="btn-logout">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <header>
             <h1>Bienvenido, <%= currentUser.getUsername() %>!</h1>

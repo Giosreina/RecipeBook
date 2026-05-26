@@ -25,6 +25,7 @@
         <title>Registro de Usuario - RecipeBook</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/registro.css">
         <script>
             let usernames = [<%= usernames.stream().map(username -> "\"" + username + "\"").collect(Collectors.joining(",")) %>];
@@ -32,7 +33,21 @@
         <script src="./js/registro.js"></script>
     </head>
     <body>
-        <div class="container">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="explorar.html">Explorar Recetas</a></li>
+                </ul>
+                <div class="navbar-user-section">
+                    <a href="login.jsp" class="btn-login">Iniciar Sesión</a>
+                    <a href="registro.jsp" class="active">Registrarse</a>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="container">
             <header>
                 <h1>Registro de usuario</h1>
             </header>
@@ -151,6 +166,7 @@
             <div class="login-link">
                 <a href="login.jsp">¿Ya tienes una cuenta? Inicia sesión</a>
             </div>
-        </div>
+            </div>
+        </main>
     </body>
 </html>

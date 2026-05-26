@@ -7,6 +7,7 @@
 <%
     // 1. Recuperar el DAO de la sesión con validación
     UserDao userDao = (UserDao) session.getAttribute("userDao");
+    User currentUser = (User) session.getAttribute("currentUser");
     List<Receta> recetasCategoria = new ArrayList<>();
     String categoria = request.getParameter("categoria");
 
@@ -36,9 +37,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Recetas por Categoría</title>
         <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/explorarR.css">
     </head>
     <body>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="explorar.html" class="active">Explorar Recetas</a></li>
+                </ul>
+                <div class="navbar-user-section">
+                    <% if (currentUser != null) { %>
+                        <span class="navbar-user-info">Bienvenido, <%= currentUser.getUsername() %></span>
+                        <div class="navbar-divider"></div>
+                        <a href="perfil.jsp">Mi Perfil</a>
+                        <a href="LogoutServlet" class="btn-logout">Cerrar Sesión</a>
+                    <% } else { %>
+                        <a href="login.jsp" class="btn-login">Iniciar Sesión</a>
+                        <a href="registro.jsp">Registrarse</a>
+                    <% } %>
+                </div>
+            </div>
+        </nav>
         <div class="container">
             <header>
                 <h1>Recetas de <%= (categoria != null) ? categoria : "Categoría Desconocida" %></h1>

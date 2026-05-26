@@ -1,21 +1,44 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.recipebook.logic.Receta" %>
 <%@ page import="com.recipebook.logic.steps.*" %>
+<%@ page import="com.recipebook.logic.User" %>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
 <%@ page import="java.util.List" %>
 <%
     Receta receta = (Receta) session.getAttribute("receta");
     List<Paso> pasos = (List<Paso>) session.getAttribute("pasos");
+    User currentUser = (User) session.getAttribute("currentUser");
 %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Receta de ${receta.getNombre()}</title>
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="./css/receta.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+            <ul class="navbar-nav">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="explorar.html">Explorar Recetas</a></li>
+            </ul>
+            <div class="navbar-user-section">
+                <% if (currentUser != null) { %>
+                    <span class="navbar-user-info">Bienvenido, <%= currentUser.getUsername() %></span>
+                    <div class="navbar-divider"></div>
+                    <a href="perfil.jsp">Mi Perfil</a>
+                    <a href="LogoutServlet" class="btn-logout">Cerrar Sesión</a>
+                <% } else { %>
+                    <a href="login.jsp" class="btn-login">Iniciar Sesión</a>
+                    <a href="registro.jsp">Registrarse</a>
+                <% } %>
+            </div>
+        </div>
+    </nav>
     <div class="container">
         <div class="header">
             <h1 id="nombreReceta">${receta.getNombre()}</h1>

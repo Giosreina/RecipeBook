@@ -7,10 +7,25 @@
         <title>Inicio de Sesión - RecipeBook</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/login.css">
     </head>
     <body>
-        <div class="container">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="explorar.html">Explorar Recetas</a></li>
+                </ul>
+                <div class="navbar-user-section">
+                    <a href="login.jsp" class="btn-login active">Iniciar Sesión</a>
+                    <a href="registro.jsp">Registrarse</a>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="container">
             <header>
                 <h1>Inicio de Sesión</h1>
             </header>
@@ -36,7 +51,8 @@
             <div class="login-link">
                 <a href="registro.jsp">¿No tienes una cuenta? Regístrate</a>
             </div>
-        </div>
+            </div>
+        </main>
     </body>
 </html>
 
