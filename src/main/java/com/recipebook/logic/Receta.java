@@ -17,6 +17,7 @@ public class Receta {
     private int tiempo_preparacion; // en minutos.segundos
     private final List<Paso> pasos;
     private double valoracion;
+    private String descripcionValoracion;
 
     public Receta(String nombre, String imagen, String descripcion, String tipo){
         this.nombre = nombre;
@@ -125,5 +126,13 @@ public class Receta {
     }
     public void setValoracion(double valoracion) {
         this.valoracion = valoracion;
+    }
+    
+    public String getDescripcionValoracion() {
+        return descripcionValoracion;
+    }
+    
+    public void setDescripcionValoracion(String descripcionValoracion) {
+        this.descripcionValoracion = descripcionValoracion;
     }
 }

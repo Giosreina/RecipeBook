@@ -23,6 +23,9 @@ public class RecetasContainer {
     }
 
     public Receta selectReceta(int index) {
+        if (recetas == null) {
+            return null;
+        }
         if (index >= 0 && index < recetas.size()) {
             return recetas.get(index);
         }
@@ -34,15 +37,15 @@ public class RecetasContainer {
     }
 
     public void setRecetas(List<Receta> recetas) {
-        this.recetas = recetas;
+        this.recetas = recetas != null ? recetas : new ArrayList<>();
     }
 
     public int size() {
-        return recetas.size();
+        return recetas != null ? recetas.size() : 0;
     }
 
     public boolean isEmpty() {
-        return recetas.isEmpty();
+        return recetas == null || recetas.isEmpty();
     }
 
     public List<Receta> getRecetasByTipo(String tipo) {

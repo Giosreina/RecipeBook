@@ -30,14 +30,17 @@
         
         <div class="valoracion">
             <p><strong>Valoración:</strong></p>
-            <div class="estrellas" data-rating="${receta.getValor()}">
+            <div class="estrellas" data-rating="${receta.getValoracion()}">
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star"></i>
             </div>
-            <p class="valoracion-numero">${String.format("%.1f", receta.getValor())}</p>
+            <p class="valoracion-numero">${String.format("%.1f", receta.getValoracion())}</p>
+            <% if (receta.getDescripcionValoracion() != null && !receta.getDescripcionValoracion().isEmpty()) { %>
+                <p class="descripcion-valoracion"><strong>Comentario:</strong> <%= receta.getDescripcionValoracion() %></p>
+            <% } %>
         </div>
         
         <div class="botones">
@@ -79,7 +82,8 @@
                 <li class="paso">
                     <p><strong>Descripción:</strong> <%= paso.getDescripcion() %></p>
                     <p><strong>Tiempo:</strong> <%= paso.getTiempo() %> minutos</p>
-                    <% if (paso instanceof PasoWextras pasoExtra) { %>
+                    <% if (paso instanceof PasoWextras) { %>
+                        <% PasoWextras pasoExtra = (PasoWextras) paso; %>
                         <p><strong>Utensilios:</strong></p>
                         <ul>
                             <% for (String utensilio : pasoExtra.getUtensilios()) { %>

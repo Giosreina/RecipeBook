@@ -7,7 +7,8 @@ package com.recipebook.servlet;
 import java.io.IOException;
 import java.util.List;
 
-import com.recipebook.logic.*;
+import com.recipebook.logic.Receta;
+import com.recipebook.logic.RecetasContainer;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -44,11 +45,26 @@ public class VisorRecetaServlet extends HttpServlet {
                 // Get the recetas container from session
                 @SuppressWarnings("unchecked")
                 List<Receta> rContainer =  (List<Receta>) request.getSession().getAttribute("listRecetas");
+                
+                // Check if rContainer is null
+                if (rContainer == null) {
+                    System.out.println("Error: listRecetas not found in session");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No recipes available in session");
+                    return;
+                }
+                
                 RecetasContainer container = new RecetasContainer();
                 container.setRecetas(rContainer);
                 
                 // Get the specific receta
                 Receta receta = container.selectReceta(id);
+                
+                // Check if receta was found
+                if (receta == null) {
+                    System.out.println("Error: Receta not found with id: " + id);
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Recipe not found");
+                    return;
+                }
                 
                 // Store receta and its steps in session for JSP access
                 request.getSession().setAttribute("receta", receta);
@@ -59,9 +75,11 @@ public class VisorRecetaServlet extends HttpServlet {
                 
             } catch (NumberFormatException e) {
                 System.out.println("Error: " + e.getMessage());
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid recipe ID");
             }
         } else {
             System.out.println("Error: recetaId is null");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Recipe ID parameter missing");
         }
     }
 

@@ -283,6 +283,9 @@ public class RecetaDao {
         Receta receta = new Receta(nombre, urlImagen, descripcion, tipo);
         receta.setTiempo(tiempo);
 
+        // Obtener valoración promedio y descripción
+        obtenerValoracionReceta(recetaID, receta);
+
         // Obtener pasos
         String selectPasosQuery = String.format("SELECT * FROM pasos WHERE id_receta = %d", recetaID);
         try {
@@ -420,6 +423,41 @@ public class RecetaDao {
             e.printStackTrace();
         }
         return utensilios;
+    }
+
+    /**
+     * Obtiene la valoración promedio y descripción de una receta.
+     */
+    private void obtenerValoracionReceta(int idReceta, Receta receta) {
+        try {
+            // Obtener promedio de valoración
+            String selectPromedioQuery = String.format(
+                "SELECT AVG(valor) as promedio_valor FROM valoracion WHERE id_receta = %d AND valor IS NOT NULL",
+                idReceta
+            );
+            ResultSet rsPromedio = sqlController.executeQuery(selectPromedioQuery);
+            if (rsPromedio.next()) {
+                double promedio = rsPromedio.getDouble("promedio_valor");
+                if (!Double.isNaN(promedio)) {
+                    receta.setValoracion(promedio);
+                }
+            }
+
+            // Obtener descripción del comentario más reciente
+            String selectDescripcionQuery = String.format(
+                "SELECT comentario FROM valoracion WHERE id_receta = %d AND comentario IS NOT NULL ORDER BY fecha_comentario DESC LIMIT 1",
+                idReceta
+            );
+            ResultSet rsDescripcion = sqlController.executeQuery(selectDescripcionQuery);
+            if (rsDescripcion.next()) {
+                String descripcion = rsDescripcion.getString("comentario");
+                if (descripcion != null && !descripcion.isEmpty()) {
+                    receta.setDescripcionValoracion(descripcion);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
