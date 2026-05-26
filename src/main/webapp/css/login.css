@@ -6,12 +6,20 @@ body {
     background-image: url("../resources/img/elegant-background.jpg");
     background-size: cover;
     background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    padding-top: 80px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 .container {
