@@ -7,15 +7,29 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.stream.*" %>
 <%
-    UsersContainer usersContainer = ((UserDao)session.getAttribute("userDao")).obtenerUsuarios();
-    if(usersContainer == null){
+    // Safely retrieve the UserDao from the session
+    UserDao userDao = (UserDao) session.getAttribute("userDao");
+    UsersContainer usersContainer = null;
+    
+    // Only attempt to fetch users if the DAO exists
+    if (userDao != null) {
+        usersContainer = userDao.obtenerUsuarios();
+    }
+    
+    // Initialize a new container if it's still null
+    if (usersContainer == null) {
         usersContainer = new UsersContainer();
     }
+
     List<String> usernames = new ArrayList<>();
     String connection = (String) session.getAttribute("conexion");
-    if(usersContainer != null){
+    
+    // Safely extract usernames for the JavaScript validation
+    if (usersContainer.getUsers() != null) {
         for(User user : usersContainer.getUsers()) {
-            usernames.add(user.getUsername());
+            if (user.getUsername() != null) {
+                usernames.add(user.getUsername());
+            }
         }
     }
 %>
