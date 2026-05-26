@@ -10,6 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
         <jakartaee>11.0.0-M1</jakartaee>
     </properties>
 
@@ -82,7 +84,24 @@
                     <httpConnector>
                         <port>8080</port>
                     </httpConnector>
+                    <systemProperties>
+                        <systemProperty>
+                            <name>java.library.path</name>
+                            <value>${project.basedir}/libs</value>
+                        </systemProperty>
+                        <systemProperty>
+                            <name>org.eclipse.jetty.jsp.precompile</name>
+                            <value>false</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.eclipse.jdt</groupId>
+                        <artifactId>ecj</artifactId>
+                        <version>3.33.0</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
