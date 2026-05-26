@@ -5,28 +5,28 @@
 <%@ page import="java.util.ArrayList" %>
 
 <%
-    // 1. Recuperar el DAO de la sesión con validación
-    UserDao userDao = (UserDao) session.getAttribute("userDao");
     User currentUser = (User) session.getAttribute("currentUser");
-    List<Receta> recetasCategoria = new ArrayList<>();
     String categoria = request.getParameter("categoria");
+    List<Receta> recetasCategoria = new ArrayList<>();
 
-    if (userDao != null && categoria != null) {
-        RecetaDao recetaDao = userDao.getRecetaDAO();
-        RecetasContainer recetaContainerDB = new RecetasContainer(recetaDao.obtenerRecetas());
-        RecetasContainer recetasCategoriaRC = new RecetasContainer();
+    // Conexión fresca por request — nunca de sesión
+    SQLController sql = new SQLController(
+        "jdbc:postgresql://localhost:5432/recipebook", "giosreina", "Kabuto43*"
+    );
+    try {
+        if (sql.isConnected() && categoria != null) {
+            RecetaDao recetaDao = new RecetaDao(sql);
+            List<Receta> todas = recetaDao.obtenerRecetas();
 
-        for (Receta receta : recetaContainerDB.getRecetas()) {
-            // CORRECCIÓN: Validamos que el tipo no sea null antes de usar toString()
-            Object tipoRaw = receta.getTipo();
-            if (tipoRaw != null) {
-                String tipoStr = tipoRaw.toString();
-                if (tipoStr.equalsIgnoreCase(categoria)) {
-                    recetasCategoriaRC.addReceta(receta);
+            for (Receta receta : todas) {
+                String tipo = receta.getTipo();
+                if (tipo != null && tipo.equalsIgnoreCase(categoria)) {
+                    recetasCategoria.add(receta);
                 }
             }
         }
-        recetasCategoria = recetasCategoriaRC.getRecetas();
+    } finally {
+        sql.closeConnection(); // siempre se cierra
     }
 %>
 
@@ -52,7 +52,7 @@
                     <% if (currentUser != null) { %>
                         <span class="navbar-user-info">Bienvenido, <%= currentUser.getUsername() %></span>
                         <div class="navbar-divider"></div>
-                        <a href="perfil.jsp">Mi Perfil</a>
+                        <a href="PerfilServlet">Mi Perfil</a>
                         <a href="LogoutServlet" class="btn-logout">Cerrar Sesión</a>
                     <% } else { %>
                         <a href="login.jsp" class="btn-login">Iniciar Sesión</a>
@@ -61,33 +61,32 @@
                 </div>
             </div>
         </nav>
+
         <div class="container">
             <header>
                 <h1>Recetas de <%= (categoria != null) ? categoria : "Categoría Desconocida" %></h1>
                 <p class="subtitle">Descubre las mejores recetas de <%= (categoria != null) ? categoria : "" %></p>
             </header>
-        
+
             <div class="recipe-grid">
-                <% if (recetasCategoria != null && !recetasCategoria.isEmpty()) {
-                        // Guardamos la lista filtrada en sesión para el visor
-                        session.setAttribute("listRecetas", recetasCategoria);
-                        for (int i = 0; i < recetasCategoria.size(); i++) {
-                            Receta receta = recetasCategoria.get(i);
-                %>
-                <a href="VisorRecetaServlet?id=<%= i %>" class="recipe-card">
-                    <div class="recipe-info">
-                        <h3><%= receta.getNombre() %></h3>
-                        <p><%= receta.getDescripcion() %></p>
-                        <span class="recipe-type"><%= receta.getTipo() %></span>
-                    </div>
-                    <div class="recipe-image" style="background-image: url('<%= receta.getImagen() %>');"></div>
-                </a>
-                <%      }
-                    } else { %>
-                    <p>No hay recetas disponibles en esta categoría o no se pudo cargar la base de datos.</p>
+                <% if (!recetasCategoria.isEmpty()) {
+                    for (Receta receta : recetasCategoria) { %>
+                        <%-- Se pasa el ID real de la BD, no el índice de la lista --%>
+                        <a href="VisorRecetaServlet?id=<%= receta.getId() %>" class="recipe-card">
+                            <div class="recipe-info">
+                                <h3><%= receta.getNombre() %></h3>
+                                <p><%= receta.getDescripcion() != null ? receta.getDescripcion() : "" %></p>
+                                <span class="recipe-type"><%= receta.getTipo() %></span>
+                            </div>
+                            <% if (receta.getImagen() != null && !receta.getImagen().isEmpty()) { %>
+                                <div class="recipe-image" style="background-image: url('<%= receta.getImagen() %>');"></div>
+                            <% } %>
+                        </a>
+                <%  }
+                } else { %>
+                    <p>No hay recetas disponibles en esta categoría.</p>
                 <% } %>
             </div>
         </div>
     </body>
 </html>
-
