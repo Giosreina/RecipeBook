@@ -7,7 +7,9 @@ import java.util.List;
 import com.recipebook.dao.RecetaDao;
 import com.recipebook.dao.SQLController;
 import com.recipebook.dao.UserDao;
+import com.recipebook.dao.VistaDao;
 import com.recipebook.logic.Receta;
+import com.recipebook.logic.RecetasContainer;
 import com.recipebook.logic.User;
 
 import jakarta.servlet.ServletException;
@@ -49,6 +51,26 @@ public class PerfilServlet extends HttpServlet {
         }
 
         request.setAttribute("userRecetas", recetas);
+        if (currentUser != null) {
+            RecetasContainer recetasContainer = currentUser.getRecetas();
+            if (recetasContainer != null) {
+                recetas = recetasContainer.getRecetas();
+                request.setAttribute("userRecetas", recetas);
+            }
+        }
+
+        // NUEVO: top 5 recetas para mostrar en el perfil
+
+        VistaDao vistaDao = (VistaDao) session.getAttribute("vistaDao");
+        if (vistaDao != null) {
+            List<VistaDao.RecetaMejorValorada> top5 = vistaDao.obtenerRecetasMejorValoradas();
+            request.setAttribute("top5Recetas", top5);
+ 
+            // NUEVO: usernames con recetas 
+            List<String> usuariosActivos = vistaDao.obtenerUsernamesConRecetas();
+            request.setAttribute("usuariosActivos", usuariosActivos);
+        }
+
         request.getRequestDispatcher("perfil.jsp").forward(request, response);
     }
 }

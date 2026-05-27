@@ -57,7 +57,9 @@
         <header>
             <h1>Bienvenido, <%= currentUser.getUsername() %>!</h1>
             <nav>
-                <a href="explorar.html" class="nav-button">Explorar Recetas</a>
+                <a href="ExplorarServlet" class="nav-button">Explorar Recetas</a>
+                <a href="dashboard.jsp" class="nav-button">📊 Dashboard de Vistas</a>
+                <a href="index.html" class="nav-button">Cerrar Sesión</a>
             </nav>
         </header>
         <main>

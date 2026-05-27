@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.recipebook.dao.SQLController;
 import com.recipebook.dao.UserDao;
+import com.recipebook.dao.VistaDao;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -49,6 +50,9 @@ public class IndexServlet extends HttpServlet {
 
         UserDao userDao = new UserDao(sqlController);
         session.setAttribute("userDao", userDao);
+
+        VistaDao vistaDao = new VistaDao(sqlController);
+        session.setAttribute("vistaDao", vistaDao);
 
         response.sendRedirect("registro.jsp");
     }

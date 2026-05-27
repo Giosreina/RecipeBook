@@ -5,9 +5,11 @@
 package com.recipebook.servlet;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.recipebook.dao.SQLController;
 import com.recipebook.dao.UserDao;
+import com.recipebook.dao.VistaDao;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,7 +55,23 @@ public class ExplorarServlet extends HttpServlet {
         UserDao userDao = new UserDao(sqlController);
         session.setAttribute("userDao", userDao);
 
-        response.sendRedirect("explorar.html");
+        // NUEVO
+        VistaDao vistaDao = new VistaDao(sqlController);
+        session.setAttribute("vistaDao", vistaDao);
+ 
+        // Vista 1 — top 5 recetas mejor valoradas
+        List<VistaDao.RecetaMejorValorada> top5 = vistaDao.obtenerRecetasMejorValoradas();
+        request.setAttribute("top5Recetas", top5);
+ 
+        // Vista 2 — reporte por tipo de receta (para filtros o sidebar)
+        List<VistaDao.ReporteReceta> reporteTipos = vistaDao.obtenerReporteRecetas();
+        request.setAttribute("reporteTipos", reporteTipos);
+ 
+        // Vista 4 — recetas rápidas (<= 30 min)
+        List<VistaDao.RecetaRapida> recetasRapidas = vistaDao.obtenerRecetasRapidas();
+        request.setAttribute("recetasRapidas", recetasRapidas);
+
+        response.sendRedirect("explorar.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
