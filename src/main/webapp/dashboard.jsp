@@ -74,7 +74,7 @@
             <% } else { %>
 
             <!-- ========== TARJETAS RESUMEN ========== -->
-            <h2 class="section-title">📋 Resumen General</h2>
+            <h2 id="resumen-general" class="section-title">📋 Resumen General</h2>
             <div class="stats-row">
                 <div class="stat-card">
                     <div class="stat-icon">📖</div>
@@ -102,7 +102,8 @@
             <div class="dashboard-grid">
 
                 <!-- ===== VISTA 1 — Recetas Mejor Valoradas ===== -->
-                <div class="dashboard-card">
+                <!-- ID: vista-mejor-valoradas -->
+                <div id="vista-mejor-valoradas" class="dashboard-card">
                     <div class="card-header">
                         <span class="card-header-icon">⭐</span>
                         Vista 1 — Recetas Mejor Valoradas
@@ -144,6 +145,7 @@
                 </div>
 
                 <!-- ===== VISTA 2 — Reporte de Recetas ===== -->
+                <!-- ID: vista-reporte-categorias -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <span class="card-header-icon">📊</span>
@@ -183,6 +185,7 @@
                 </div>
 
                 <!-- ===== VISTA 3 — Usuarios (vista de seguridad) ===== -->
+                <!-- ID: vista-usuarios -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <span class="card-header-icon">👥</span>
@@ -205,6 +208,7 @@
                 </div>
 
                 <!-- ===== VISTA 4 — Recetas Rápidas ===== -->
+                <!-- ID: vista-recetas-rapidas -->
                 <div class="dashboard-card">
                     <div class="card-header">
                         <span class="card-header-icon">⚡</span>
