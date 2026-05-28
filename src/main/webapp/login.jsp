@@ -16,7 +16,7 @@
                 <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
                 <ul class="navbar-nav">
                     <li><a href="index.html">Inicio</a></li>
-                    <li><a href="explorar.html">Explorar Recetas</a></li>
+                    <li><a href="explorar.jsp">Explorar Recetas</a></li>
                 </ul>
                 <div class="navbar-user-section">
                     <a href="login.jsp" class="btn-login active">Iniciar Sesión</a>

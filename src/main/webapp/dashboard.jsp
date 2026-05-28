@@ -1,34 +1,42 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.recipebook.dao.VistaDao" %>
+<%@ page import="com.recipebook.logic.User" %>
 <%@ page import="java.util.List" %>
 <%
-    // Obtener el VistaDao que ya fue creado por IndexServlet
+    User currentUser = (User) session.getAttribute("currentUser");
+    if (currentUser == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    boolean esAdmin = "administrador".equalsIgnoreCase(currentUser.getRol());
+
     VistaDao vistaDao = (VistaDao) session.getAttribute("vistaDao");
 
-    // Variables para los datos de las vistas
     List<VistaDao.RecetaMejorValorada> mejorValoradas = null;
-    List<VistaDao.ReporteReceta> reporteRecetas = null;
-    List<String> usuarios = null;
-    List<VistaDao.RecetaRapida> recetasRapidas = null;
+    List<VistaDao.ReporteReceta>       reporteRecetas  = null;
+    List<String>                       usuarios        = null;
+    List<VistaDao.RecetaRapida>        recetasRapidas  = null;
 
     boolean conectado = false;
 
     if (vistaDao != null) {
-        conectado = true;
+        conectado      = true;
         mejorValoradas = vistaDao.obtenerRecetasMejorValoradas();
         reporteRecetas = vistaDao.obtenerReporteRecetas();
-        usuarios       = vistaDao.obtenerUsernamesConRecetas();
+        if (esAdmin) {
+            usuarios = vistaDao.obtenerUsernamesConRecetas();
+        }
         recetasRapidas = vistaDao.obtenerRecetasRapidas();
     }
 
-    // Calcular totales para las tarjetas de resumen
     int totalRecetas = 0;
     if (reporteRecetas != null) {
         for (VistaDao.ReporteReceta rep : reporteRecetas) {
             totalRecetas += rep.totalRecetas;
         }
     }
-    int totalUsuarios  = (usuarios != null) ? usuarios.size() : 0;
+    int totalUsuarios   = (usuarios != null) ? usuarios.size() : 0;
     int totalCategorias = (reporteRecetas != null) ? reporteRecetas.size() : 0;
     int totalRapidas    = (recetasRapidas != null) ? recetasRapidas.size() : 0;
 %>
@@ -40,27 +48,43 @@
     <title>Dashboard de Vistas - Global Recipe Book</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+            <ul class="navbar-nav">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="explorar.jsp">Explorar Recetas</a></li>
+                <li><a href="subir.html">Subir Receta</a></li>
+                <li><a href="dashboard.jsp" class="active">Dashboard</a></li>
+            </ul>
+            <div class="navbar-user-section">
+                <span class="navbar-user-info">Bienvenido, <%= currentUser.getUsername() %></span>
+                <div class="navbar-divider"></div>
+                <a href="PerfilServlet">Mi Perfil</a>
+                <a href="LogoutServlet" class="btn-logout">Cerrar Sesión</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
 
         <!-- ========== HEADER ========== -->
         <header>
             <h1>📊 Dashboard de Vistas</h1>
             <p class="subtitle">Resumen de datos desde las vistas de la base de datos</p>
-            <nav>
-                <a href="perfil.jsp"   class="nav-button">Mi Perfil</a>
-                <a href="ExplorarServlet" class="nav-button">Explorar Recetas</a>
-                <a href="index.html"   class="nav-button">Inicio</a>
-            </nav>
         </header>
 
         <main>
             <% if (!conectado) { %>
                 <div class="empty-state">
-                    <p>⚠️ No se pudo conectar a la base de datos. Por favor, accede primero desde el
-                       <a href="IndexServlet">inicio</a> para inicializar la conexión.</p>
+                    <p>⚠️ No se pudo conectar a la base de datos. Por favor, inicia sesión nuevamente desde
+                       <a href="login.jsp">aquí</a>.</p>
                 </div>
             <% } else { %>
 
@@ -72,11 +96,13 @@
                     <div class="stat-value"><%= totalRecetas %></div>
                     <div class="stat-label">Recetas Totales</div>
                 </div>
+                <% if (esAdmin) { %>
                 <div class="stat-card">
                     <div class="stat-icon">👥</div>
                     <div class="stat-value"><%= totalUsuarios %></div>
                     <div class="stat-label">Usuarios Activos</div>
                 </div>
+                <% } %>
                 <div class="stat-card">
                     <div class="stat-icon">🏷️</div>
                     <div class="stat-value"><%= totalCategorias %></div>
@@ -173,19 +199,21 @@
                     </div>
                 </div>
 
-                <!-- ===== VISTA 3 — Usuarios (vista de seguridad) ===== -->
+                <!-- ===== VISTA 3 — Usuarios (solo administradores) ===== -->
+                <% if (esAdmin) { %>
                 <div class="dashboard-card">
                     <div class="card-header">
                         <span class="card-header-icon">👥</span>
                         Vista 3 — Usuarios Registrados
+                        <span class="badge badge-gold" style="float:right;font-size:0.7rem;">Admin</span>
                     </div>
                     <div class="card-body">
                         <% if (usuarios != null && !usuarios.isEmpty()) { %>
                         <div class="user-chips">
-                            <% for (String username : usuarios) { %>
+                            <% for (String uname : usuarios) { %>
                             <div class="user-chip">
                                 <span class="user-chip-icon">👤</span>
-                                <%= username %>
+                                <%= uname %>
                             </div>
                             <% } %>
                         </div>
@@ -194,6 +222,7 @@
                         <% } %>
                     </div>
                 </div>
+                <% } %>
 
                 <!-- ===== VISTA 4 — Recetas Rápidas ===== -->
                 <div class="dashboard-card">
