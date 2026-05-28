@@ -72,6 +72,12 @@ nav {
     transform: translateY(-2px);
 }
 
+/* Focus visible para navegacion con teclado */
+.nav-button:focus-visible {
+    outline: 3px solid #d4a373;
+    outline-offset: 2px;
+}
+
 /* ---------- Main ---------- */
 main {
     background-color: rgba(255, 255, 255, 0.95);
