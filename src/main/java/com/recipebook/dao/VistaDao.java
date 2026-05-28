@@ -6,6 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * VistaDao — Data Access Object para las vistas SQL del dashboard.
+ * 
+ * Este DAO consume las siguientes vistas de PostgreSQL:
+ *   1. recetas_mejor_valoradas  → Top 5 recetas (Simplificación)
+ *   2. reporte_recetas          → Reporte por categoría (Reporte)
+ *   3. usuario_receta           → Usernames sin datos sensibles (Seguridad)
+ *   4. v_recetas_rapidas        → Recetas <= 30 min (Actualizable)
+ * 
+ * Los datos son consumidos por dashboard.jsp para su visualización.
+ * 
+ * @see com.recipebook.servlet.IndexServlet
+ */
 @SuppressWarnings("CallToPrintStackTrace")
 public class VistaDao {
 
