@@ -1,14 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.recipebook.servlet;
 
 import java.io.IOException;
 import java.util.List;
 
+import com.recipebook.dao.DAOFactory;
 import com.recipebook.dao.SQLController;
-import com.recipebook.dao.UserDao;
 import com.recipebook.dao.VistaDao;
 
 import jakarta.servlet.ServletException;
@@ -16,101 +12,48 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author jkqui
- */
 @WebServlet(name = "ExplorarServlet", urlPatterns = {"/ExplorarServlet"})
 public class ExplorarServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
 
-        // Conexión a PostgreSQL
-        String connectionUrl = "jdbc:postgresql://localhost:5432/recipebook";
-        String user = "giosreina";
-        String password = "Kabuto43*";
-        
-        SQLController sqlController = new SQLController(connectionUrl, user, password);
+        // Conexión fresca por request; se cierra al terminar
+        SQLController sql = DAOFactory.crearConexion();
+        try {
+            VistaDao vistaDao = new VistaDao(sql);
 
-        session.setAttribute("connectionUrl", connectionUrl);
+            // Vista 1 — top 5 recetas mejor valoradas
+            List<VistaDao.RecetaMejorValorada> top5 = vistaDao.obtenerRecetasMejorValoradas();
+            request.setAttribute("top5Recetas", top5);
 
-        boolean connected = sqlController.isConnected();
-        String conexion = connected ? "Conectado" : "Desconectado";
-        session.setAttribute("conexion", conexion);
+            // Vista 2 — reporte por tipo (conteos por categoría)
+            List<VistaDao.ReporteReceta> reporteTipos = vistaDao.obtenerReporteRecetas();
+            request.setAttribute("reporteTipos", reporteTipos);
 
-        UserDao userDao = new UserDao(sqlController);
-        session.setAttribute("userDao", userDao);
+            // Vista 4 — recetas rápidas (<= 30 min)
+            List<VistaDao.RecetaRapida> recetasRapidas = vistaDao.obtenerRecetasRapidas();
+            request.setAttribute("recetasRapidas", recetasRapidas);
 
-        // NUEVO
-        VistaDao vistaDao = new VistaDao(sqlController);
-        session.setAttribute("vistaDao", vistaDao);
- 
-        // Vista 1 — top 5 recetas mejor valoradas
-        List<VistaDao.RecetaMejorValorada> top5 = vistaDao.obtenerRecetasMejorValoradas();
-        request.setAttribute("top5Recetas", top5);
- 
-        // Vista 2 — reporte por tipo de receta (para filtros o sidebar)
-        List<VistaDao.ReporteReceta> reporteTipos = vistaDao.obtenerReporteRecetas();
-        request.setAttribute("reporteTipos", reporteTipos);
- 
-        // Vista 4 — recetas rápidas (<= 30 min)
-        List<VistaDao.RecetaRapida> recetasRapidas = vistaDao.obtenerRecetasRapidas();
-        request.setAttribute("recetasRapidas", recetasRapidas);
+        } finally {
+            sql.closeConnection();
+        }
 
-        response.sendRedirect("explorar.jsp");
+        // forward conserva los atributos del request; sendRedirect los pierde
+        request.getRequestDispatcher("explorar.jsp").forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

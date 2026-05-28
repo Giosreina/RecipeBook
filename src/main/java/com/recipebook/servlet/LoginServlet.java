@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.recipebook.dao.DAOFactory;
 import com.recipebook.dao.SQLController;
 import com.recipebook.dao.UserDao;
+import com.recipebook.dao.VistaDao;
 import com.recipebook.logic.User;
 
 import jakarta.servlet.ServletException;
@@ -12,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -22,16 +24,17 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        SQLController sql = DAOFactory.crearConexion();
+        // Conexión temporal solo para autenticar
+        SQLController sqlAuth = DAOFactory.crearConexion();
         try {
-            if (!sql.isConnected()) {
+            if (!sqlAuth.isConnected()) {
                 request.setAttribute("mensaje", "Error: No se pudo conectar a la base de datos");
                 request.setAttribute("mensajeClase", "error");
                 request.getRequestDispatcher("login.jsp").forward(request, response);
                 return;
             }
 
-            UserDao userDao = new UserDao(sql);
+            UserDao userDao = new UserDao(sqlAuth);
             User user = userDao.obtenerUsuario(username);
 
             if (user == null) {
@@ -41,14 +44,24 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("mensaje", "Contraseña incorrecta");
                 request.setAttribute("mensajeClase", "error");
             } else {
-                request.getSession().setAttribute("currentUser", user);
+                HttpSession session = request.getSession();
+                session.setAttribute("currentUser", user);
+
+                // Crear una conexión de sesión dedicada para VistaDao y UserDao
+                SQLController sqlSession = DAOFactory.crearConexion();
+                if (sqlSession.isConnected()) {
+                    session.setAttribute("vistaDao", new VistaDao(sqlSession));
+                    session.setAttribute("userDao",  new UserDao(sqlSession));
+                    session.setAttribute("conexion", "Conectado");
+                }
+
                 response.sendRedirect("PerfilServlet");
                 return;
             }
             request.getRequestDispatcher("login.jsp").forward(request, response);
 
         } finally {
-            sql.closeConnection(); 
+            sqlAuth.closeConnection();
         }
     }
 }
