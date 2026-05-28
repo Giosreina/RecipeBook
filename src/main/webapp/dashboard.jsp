@@ -1,6 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.recipebook.dao.VistaDao" %>
 <%@ page import="java.util.List" %>
+<%--
+    dashboard.jsp — Panel de control de vistas SQL
+    Autor: Felipe
+    Descripción: Muestra las 4 vistas de la base de datos
+                 (recetas_mejor_valoradas, reporte_recetas,
+                  usuario_receta, v_recetas_rapidas)
+    Requiere: VistaDao en sesión (creado por IndexServlet)
+--%>
 <%
     // Obtener el VistaDao que ya fue creado por IndexServlet
     VistaDao vistaDao = (VistaDao) session.getAttribute("vistaDao");
