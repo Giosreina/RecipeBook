@@ -45,6 +45,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard de vistas SQL del proyecto Global Recipe Book. Visualiza las recetas mejor valoradas, reportes por categoría, usuarios registrados y recetas rápidas.">
     <title>Dashboard de Vistas - Global Recipe Book</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
           rel="stylesheet">
