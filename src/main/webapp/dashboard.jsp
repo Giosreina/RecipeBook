@@ -58,10 +58,10 @@
         <header>
             <h1>📊 Dashboard de Vistas</h1>
             <p class="subtitle">Resumen de datos desde las vistas de la base de datos</p>
-            <nav>
-                <a href="perfil.jsp"   class="nav-button">Mi Perfil</a>
-                <a href="ExplorarServlet" class="nav-button">Explorar Recetas</a>
-                <a href="index.html"   class="nav-button">Inicio</a>
+            <nav aria-label="Navegación del dashboard">
+                <a href="perfil.jsp"   class="nav-button" aria-label="Ir a mi perfil">Mi Perfil</a>
+                <a href="ExplorarServlet" class="nav-button" aria-label="Explorar recetas disponibles">Explorar Recetas</a>
+                <a href="index.html"   class="nav-button" aria-label="Volver al inicio">Inicio</a>
             </nav>
         </header>
 
