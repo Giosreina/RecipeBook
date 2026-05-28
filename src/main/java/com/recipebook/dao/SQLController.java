@@ -51,6 +51,7 @@ public class SQLController {
     public ResultSet executeQuery(String query) throws SQLException {
         if (isConnected()) {
             Statement statement = connection.createStatement();
+            statement.closeOnCompletion();
             return statement.executeQuery(query);
         } else {
             throw new SQLException("Not connected to the database.");
@@ -75,8 +76,8 @@ public class SQLController {
             e.printStackTrace();
         }
     }
-
     public boolean getConnected() {
         return connected;
     }
+    
 }

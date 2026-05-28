@@ -1,0 +1,143 @@
+/* Navbar Styles */
+.navbar {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.navbar-container {
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.navbar-brand {
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navbar-brand:hover {
+    color: #FFE4B5;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar-nav a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #FFE4B5;
+}
+
+.navbar-nav .active {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #FFE4B5;
+}
+
+.navbar-divider {
+    width: 1px;
+    height: 25px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-user-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar-user-section a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-user-section a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #FFE4B5;
+}
+
+.navbar-user-info {
+    color: #FFE4B5;
+    font-size: 13px;
+}
+
+.btn-login {
+    background-color: #FFE4B5;
+    color: #8B4513;
+}
+
+.btn-login:hover {
+    background-color: #FFDAB9;
+}
+
+.btn-logout {
+    background-color: #D32F2F;
+}
+
+.btn-logout:hover {
+    background-color: #B71C1C;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .navbar-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-nav {
+        gap: 15px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .navbar-divider {
+        display: none;
+    }
+
+    .navbar-user-section {
+        width: 100%;
+        justify-content: center;
+    }
+}

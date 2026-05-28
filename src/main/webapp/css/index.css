@@ -6,6 +6,9 @@ body {
     background-image: url('../resources/img/elegant-background.jpg');
     background-size: cover;
     background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    padding-top: 80px;
 }
 
 header {

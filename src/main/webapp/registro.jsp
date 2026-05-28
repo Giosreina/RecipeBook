@@ -7,15 +7,29 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.stream.*" %>
 <%
-    UsersContainer usersContainer = ((UserDao)session.getAttribute("userDao")).obtenerUsuarios();
-    if(usersContainer == null){
+    // Safely retrieve the UserDao from the session
+    UserDao userDao = (UserDao) session.getAttribute("userDao");
+    UsersContainer usersContainer = null;
+    
+    // Only attempt to fetch users if the DAO exists
+    if (userDao != null) {
+        usersContainer = userDao.obtenerUsuarios();
+    }
+    
+    // Initialize a new container if it's still null
+    if (usersContainer == null) {
         usersContainer = new UsersContainer();
     }
+
     List<String> usernames = new ArrayList<>();
     String connection = (String) session.getAttribute("conexion");
-    if(usersContainer != null){
+    
+    // Safely extract usernames for the JavaScript validation
+    if (usersContainer.getUsers() != null) {
         for(User user : usersContainer.getUsers()) {
-            usernames.add(user.getUsername());
+            if (user.getUsername() != null) {
+                usernames.add(user.getUsername());
+            }
         }
     }
 %>
@@ -25,6 +39,7 @@
         <title>Registro de Usuario - RecipeBook</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/registro.css">
         <script>
             let usernames = [<%= usernames.stream().map(username -> "\"" + username + "\"").collect(Collectors.joining(",")) %>];
@@ -32,7 +47,21 @@
         <script src="./js/registro.js"></script>
     </head>
     <body>
-        <div class="container">
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="index.html" class="navbar-brand">📚 RecipeBook</a>
+                <ul class="navbar-nav">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="explorar.jsp">Explorar Recetas</a></li>
+                </ul>
+                <div class="navbar-user-section">
+                    <a href="login.jsp" class="btn-login">Iniciar Sesión</a>
+                    <a href="registro.jsp" class="active">Registrarse</a>
+                </div>
+            </div>
+        </nav>
+        <main>
+            <div class="container">
             <header>
                 <h1>Registro de usuario</h1>
             </header>
@@ -151,6 +180,7 @@
             <div class="login-link">
                 <a href="login.jsp">¿Ya tienes una cuenta? Inicia sesión</a>
             </div>
-        </div>
+            </div>
+        </main>
     </body>
 </html>

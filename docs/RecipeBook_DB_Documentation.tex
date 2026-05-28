@@ -1,0 +1,533 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------
+% PAQUETES
+% ------------------------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage[table]{xcolor}
+\usepackage{fancyhdr}
+
+\definecolor{brandyellow}{RGB}{245,225,96}
+\definecolor{lightyellow}{RGB}{255,249,196}
+\definecolor{darkgray}{RGB}{40,40,40}
+\definecolor{linkblue}{RGB}{0,76,153}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkblue,
+    urlcolor=linkblue,
+    citecolor=linkblue
+}
+
+% ------------------------------------------------
+% CONFIGURACIÓN
+% ------------------------------------------------
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\tabcolsep}{8pt}
+\arrayrulecolor{darkgray}
+
+\titleformat{\section}{\normalfont\Large\bfseries\color{black}}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{*3}{*1.2}
+\titleformat{\subsection}{\normalfont\large\bfseries\color{darkgray}}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{*2}{*1}
+
+\title{Documentación de Base de Datos \\ \large RecipeBook}
+\author{
+    Giovanny Sierra Reina \\
+    Angel Andres Díaz Vergara \\
+    Juan Felipe Guevara Olaya \\
+    Mathew Stev Toro Mondragón \\
+    David Sánchez Acero
+}
+\date{27/05/2026}
+
+% ------------------------------------------------
+% DOCUMENTO
+% ------------------------------------------------
+\begin{document}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\textcolor{darkgray}{RecipeBook}}
+\fancyhead[R]{\textcolor{darkgray}{Documentación de Base de Datos}}
+\fancyfoot[C]{\textcolor{darkgray}{\thepage}}
+\setlength{\headheight}{14pt}
+\rowcolors{2}{lightyellow!60}{white}
+
+% ------------------------------------------------
+% PORTADA
+% ------------------------------------------------
+\begin{titlepage}
+    \centering
+
+    \vspace*{2cm}
+
+    \colorbox{lightyellow}{\parbox{0.9\textwidth}{\centering
+        {\Huge\bfseries\textcolor{black}{RecipeBook}}\\[0.5em]
+        {\Large\textcolor{darkgray}{Documentación de Base de Datos}}\\[0.5em]
+    }}
+
+    \vspace{1.5cm}
+
+    \vspace{2cm}
+
+    \textbf{Integrantes del equipo:}
+
+    \vspace{0.5cm}
+
+    Giovanny Sierra Reina\\
+    Angel Andres Díaz Vergara\\
+    Juan Felipe Guevara Olaya\\
+    Mathew Stev Toro Mondragón\\
+    David Sánchez Acero
+
+    \vfill
+
+    {\Large Universidad Distrital Francisco José de Caldas\par}
+
+    \vspace{0.3cm}
+
+    Bases de Datos\\
+    2026
+
+\end{titlepage}
+
+% ------------------------------------------------
+% TABLA DE VERSIONAMIENTO
+% ------------------------------------------------
+\section*{Control de Versiones}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|p{6cm}|}
+\hline
+\textbf{Versión} & \textbf{Fecha} & \textbf{Autor} & \textbf{Descripción del cambio} \\
+\hline
+1.0 & 27/05/2026 & Equipo RecipeBook & Creación inicial del documento \\
+\hline
+1.1 & --/--/---- & --- & --- \\
+\hline
+\end{tabular}
+\end{table}
+
+\vspace{1cm}
+
+% ------------------------------------------------
+% ÍNDICE
+% ------------------------------------------------
+\tableofcontents
+\newpage
+
+% ------------------------------------------------
+% DESCRIPCIÓN DEL SISTEMA
+% ------------------------------------------------
+\section{Descripción del Sistema de Información}
+
+RecipeBook es una aplicación web orientada a la gestión de recetas culinarias. El sistema permite registrar, consultar y administrar información relacionada con recetas, ingredientes, usuarios y categorías.
+
+La plataforma fue desarrollada utilizando Java, JSP, Servlets y PostgreSQL, implementando una arquitectura DAO mediante JDBC para el acceso a datos.
+
+% ------------------------------------------------
+% DESCRIPCIÓN DE LA BASE DE DATOS
+% ------------------------------------------------
+\section{Descripción de la Base de Datos}
+
+La base de datos del proyecto fue diseñada bajo un modelo relacional con el objetivo de garantizar integridad, consistencia y organización de la información.
+
+Características principales:
+
+\begin{itemize}
+    \item Uso de claves primarias y foráneas para mantener la integridad referencial.
+    \item Restricciones de integridad como \texttt{NOT NULL}, \texttt{UNIQUE} y \texttt{CHECK}.
+    \item Relaciones bien definidas entre entidades de usuario, recetas, pasos, ingredientes y categorías.
+    \item Persistencia gestionada en PostgreSQL.
+    \item Acceso a datos mediante JDBC directo y un patrón DAO centralizado en \texttt{DAOFactory}.
+\end{itemize}
+
+% ------------------------------------------------
+% DICCIONARIO DE DATOS
+% ------------------------------------------------
+\section{Diccionario de Datos}
+
+\subsection{Tabla: TIPO\_RECETA}
+
+Esta tabla almacena los diferentes tipos de recetas disponibles en la plataforma.
+
+\renewcommand{\arraystretch}{1.3}
+\small
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_tipo\_receta & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del tipo de receta. \\
+\hline
+nombre\_tipo & VARCHAR(50) & NOT NULL, UNIQUE & Nombre del tipo de receta (por ejemplo: desayuno, almuerzo). \\
+\hline
+descripcion & TEXT & NULL & Descripción opcional del tipo de receta. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: MULTIMEDIA}
+
+Esta tabla centraliza referencias a recursos multimedia asociados a usuarios, recetas y pasos.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_multimedia & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del recurso multimedia. \\
+\hline
+url & VARCHAR(255) & NOT NULL, UNIQUE & Ruta o URL del recurso multimedia. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: ROL}
+
+Define los roles de usuario que se usan para control de permisos.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_rol & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del rol. \\
+\hline
+nombre\_rol & VARCHAR(50) & NOT NULL, UNIQUE & Nombre del rol asignado al usuario. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: MODULO}
+
+Contiene los módulos del sistema asociados a operaciones de seguridad o navegación.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_modulo & SERIAL & PRIMARY KEY, NOT NULL & Identificador del módulo. \\
+\hline
+nombre\_modulo & VARCHAR(50) & NOT NULL, UNIQUE & Nombre del módulo del sistema. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: OPERACION}
+
+Relaciona acciones del sistema con módulos específicos.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_operacion & SERIAL & PRIMARY KEY, NOT NULL & Identificador de la operación. \\
+\hline
+accion & VARCHAR(100) & NOT NULL, UNIQUE & Nombre de la acción o permiso. \\
+\hline
+id\_modulo & INT & NOT NULL, FOREIGN KEY & Referencia al módulo al que pertenece la operación. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: ROL\_OPERACION}
+
+Tabla de relación muchos a muchos entre roles y operaciones.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_rol & INT & NOT NULL, FOREIGN KEY & Referencia al rol. \\
+\hline
+id\_operacion & INT & NOT NULL, FOREIGN KEY & Referencia a la operación. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: USUARIO}
+
+Almacena los usuarios registrados en el sistema.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_usuario & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del usuario. \\
+\hline
+nombre\_1 & VARCHAR(20) & NOT NULL & Primer nombre del usuario. \\
+\hline
+nombre\_2 & VARCHAR(20) & NULL & Segundo nombre del usuario (opcional). \\
+\hline
+apellido\_1 & VARCHAR(20) & NOT NULL & Primer apellido del usuario. \\
+\hline
+apellido\_2 & VARCHAR(20) & NULL & Segundo apellido del usuario (opcional). \\
+\hline
+correo\_electronico & VARCHAR(70) & NOT NULL, UNIQUE & Correo electrónico del usuario. \\
+\hline
+username & VARCHAR(100) & NOT NULL, UNIQUE & Nombre de usuario para el inicio de sesión. \\
+\hline
+password & VARCHAR(100) & NOT NULL & Contraseña cifrada o almacenada para autenticación. \\
+\hline
+id\_multimedia & INT & NULL, FOREIGN KEY & Referencia al recurso multimedia asociado al usuario. \\
+\hline
+id\_rol & INT & NOT NULL, FOREIGN KEY & Referencia al rol asignado al usuario. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: RECETAS}
+
+Contiene las recetas creadas por usuarios.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_receta & SERIAL & PRIMARY KEY, NOT NULL & Identificador único de la receta. \\
+\hline
+nombre\_receta & VARCHAR(100) & NOT NULL & Nombre de la receta. \\
+\hline
+descripcion & TEXT & NULL & Descripción detallada de la receta. \\
+\hline
+tiempo\_preparacion & INT & NULL & Tiempo estimado de preparación en minutos. \\
+\hline
+id\_usuario & INT & NOT NULL, FOREIGN KEY & Referencia al usuario autor de la receta. \\
+\hline
+id\_imagen & INT & NULL, FOREIGN KEY & Referencia a la imagen asociada a la receta. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: PASOS}
+
+Define los pasos de preparación para cada receta.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_paso & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del paso. \\
+\hline
+id\_receta & INT & NOT NULL, FOREIGN KEY & Referencia a la receta asociada. \\
+\hline
+descripcion & TEXT & NOT NULL & Descripción del paso de preparación. \\
+\hline
+id\_multimedia & INT & NULL, FOREIGN KEY & Referencia a un recurso multimedia del paso. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: INGREDIENTES}
+
+Lista los ingredientes utilizados en cada receta o paso.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_ingrediente & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del ingrediente. \\
+\hline
+id\_receta & INT & NOT NULL, FOREIGN KEY & Referencia a la receta donde se usa el ingrediente. \\
+\hline
+id\_paso & INT & NULL, FOREIGN KEY & Referencia al paso asociado (opcional). \\
+\hline
+nombre\_ingrediente & VARCHAR(255) & NOT NULL & Nombre del ingrediente. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: UTENSILIOS}
+
+Registra los utensilios necesarios para la preparación de cada receta.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_utensilio & SERIAL & PRIMARY KEY, NOT NULL & Identificador único del utensilio. \\
+\hline
+id\_receta & INT & NOT NULL, FOREIGN KEY & Referencia a la receta que requiere el utensilio. \\
+\hline
+id\_paso & INT & NOT NULL, FOREIGN KEY & Referencia al paso donde se usa el utensilio. \\
+\hline
+nombre\_utensilio & VARCHAR(255) & NOT NULL & Nombre del utensilio. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: VALORACION}
+
+Almacena las valoraciones que los usuarios hacen a las recetas.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_valoracion & SERIAL & PRIMARY KEY, NOT NULL & Identificador único de la valoración. \\
+\hline
+id\_receta & INT & NOT NULL, FOREIGN KEY & Referencia a la receta valorada. \\
+\hline
+id\_usuario & INT & NOT NULL, FOREIGN KEY & Referencia al usuario que realiza la valoración. \\
+\hline
+comentario & TEXT & NULL & Comentario opcional asociado a la valoración. \\
+\hline
+fecha\_comentario & TIMESTAMP & DEFAULT CURRENT\_DATE, CHECK & Fecha de la valoración; no puede ser posterior a la fecha actual. \\
+\hline
+valor & INT & CHECK (valor >= 1 AND valor <= 5) & Puntuación numérica de la receta. \\
+\hline
+\end{longtable}
+
+\subsection{Tabla: CLASIFICACION}
+
+Relaciona cada receta con uno o varios tipos de receta.
+
+\begin{longtable}{|p{3.5cm}|p{2.5cm}|p{3.5cm}|p{5cm}|}
+\hline
+\textbf{Campo} & \textbf{Tipo de dato} & \textbf{Restricciones} & \textbf{Propósito / Descripción} \\
+\hline
+id\_receta & INT & NOT NULL, FOREIGN KEY & Referencia a la receta clasificada. \\
+\hline
+id\_tipo\_receta & INT & NOT NULL, FOREIGN KEY & Referencia al tipo de receta. \\
+\hline
+\end{longtable}
+
+% ------------------------------------------------
+% DOCUMENTACIÓN DE VISTAS
+% ------------------------------------------------
+\section{Documentación de Vistas}
+
+\subsection{Vista: recetas\_mejor\_valoradas}
+
+\textbf{Propósito:}
+
+Presentar el top 5 de recetas con mayor promedio de valoración.
+
+\textbf{Tablas relacionadas:}
+\begin{itemize}
+    \item recetas
+    \item valoracion
+    \item usuario
+\end{itemize}
+
+\textbf{Consulta SQL asociada:}
+\begin{verbatim}
+CREATE OR REPLACE VIEW recetas_mejor_valoradas AS
+SELECT
+    u.username            AS usuario,
+    r.nombre_receta       AS receta,
+    AVG(v.valor)          AS valoracion_promedio
+FROM recetas r
+JOIN valoracion v ON r.id_receta  = v.id_receta
+JOIN usuario   u ON r.id_usuario  = u.id_usuario
+GROUP BY r.id_receta, u.id_usuario
+ORDER BY valoracion_promedio DESC
+LIMIT 5;
+\end{verbatim}
+
+\textbf{Descripción funcional:}
+
+Esta vista facilita el acceso a las recetas mejor valoradas sin tener que ejecutar manualmente los joins y agregaciones.
+
+\subsection{Vista: reporte\_recetas}
+
+\textbf{Propósito:}
+
+Generar un reporte agrupado por tipo de receta con promedio de calificación y total de recetas.
+
+\textbf{Tablas relacionadas:}
+\begin{itemize}
+    \item tipo\_receta
+    \item clasificacion
+    \item recetas
+    \item valoracion
+\end{itemize}
+
+\textbf{Consulta SQL asociada:}
+\begin{verbatim}
+CREATE OR REPLACE VIEW reporte_recetas AS
+SELECT
+    tip.nombre_tipo       AS tipo_receta,
+    AVG(v.valor)          AS promedio_valoracion,
+    COUNT(r.id_receta)    AS total_recetas
+FROM tipo_receta   tip
+JOIN clasificacion c   ON tip.id_tipo_receta = c.id_tipo_receta
+JOIN recetas       r   ON r.id_receta        = c.id_receta
+JOIN valoracion    v   ON v.id_receta        = r.id_receta
+GROUP BY tip.id_tipo_receta
+ORDER BY total_recetas DESC;
+\end{verbatim}
+
+\textbf{Descripción funcional:}
+
+Provee una vista de análisis para conocer el comportamiento de las recetas por categoría.
+
+\subsection{Vista: usuario\_receta}
+
+\textbf{Propósito:}
+
+Mostrar los usuarios que poseen recetas sin exponer datos sensibles.
+
+\textbf{Tablas relacionadas:}
+\begin{itemize}
+    \item usuario
+    \item recetas
+\end{itemize}
+
+\textbf{Consulta SQL asociada:}
+\begin{verbatim}
+CREATE OR REPLACE VIEW usuario_receta AS
+SELECT
+    u.username
+FROM usuario u
+LEFT JOIN recetas r ON u.id_usuario = r.id_usuario;
+\end{verbatim}
+
+\textbf{Descripción funcional:}
+
+Sirve para consultas de seguridad o informes donde sólo se requiere el nombre de usuario asociado a una receta.
+
+\subsection{Vista: v\_recetas\_rapidas}
+
+\textbf{Propósito:}
+
+Filtrar recetas con tiempo de preparación menor o igual a 30 minutos.
+
+\textbf{Tablas relacionadas:}
+\begin{itemize}
+    \item recetas
+\end{itemize}
+
+\textbf{Consulta SQL asociada:}
+\begin{verbatim}
+CREATE OR REPLACE VIEW v_recetas_rapidas AS
+SELECT
+    nombre_receta         AS receta,
+    tiempo_preparacion    AS minutos,
+    descripcion
+FROM recetas
+WHERE tiempo_preparacion <= 30
+WITH CHECK OPTION;
+\end{verbatim}
+
+\textbf{Descripción funcional:}
+
+Permite consultar rápidamente recetas de preparación corta y garantizar que los datos insertados o actualizados cumplan la condición definida.
+
+% ------------------------------------------------
+% CONCLUSIONES
+% ------------------------------------------------
+\section{Conclusiones}
+
+La base de datos de RecipeBook fue diseñada siguiendo principios de integridad relacional y organización estructurada de la información, permitiendo un manejo eficiente de las entidades y relaciones involucradas en el sistema.
+
+% ------------------------------------------------
+% FIN
+% ------------------------------------------------
+\end{document}
