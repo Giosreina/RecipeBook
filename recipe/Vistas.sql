@@ -1,3 +1,11 @@
+-- ============================================================
+-- Vistas.sql — Definición de vistas para el Dashboard
+-- Proyecto: Global Recipe Book
+-- Base de datos: PostgreSQL
+-- Descripcion: Este archivo crea las 4 vistas SQL utilizadas
+--              por el VistaDao.java y el dashboard.jsp
+-- ============================================================
+
 -- VISTA 1: recetas_mejor_valoradas  (Simplificación)
 -- Top 5 recetas con mayor promedio de valoración.
 -- Consolida el JOIN más frecuente: RECETAS + VALORACION + USUARIO
