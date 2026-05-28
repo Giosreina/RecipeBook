@@ -123,8 +123,8 @@
                                    for (VistaDao.RecetaMejorValorada r : mejorValoradas) { %>
                                 <tr>
                                     <td><span class="badge badge-gold"><%= pos %></span></td>
-                                    <td><strong><%= r.receta %></strong></td>
-                                    <td><%= r.usuario %></td>
+                                    <td><strong><%= r.receta != null ? r.receta : "Sin nombre" %></strong></td>
+                                    <td><%= r.usuario != null ? r.usuario : "Anónimo" %></td>
                                     <td>
                                         <span class="rating-stars">
                                             <% int estrellas = (int) Math.round(r.valoracionPromedio);
